@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -8,13 +9,22 @@ import (
 )
 
 func main() {
+
+	timeFlag := flag.String("t", "4:30", "Current stored time (format HH:MM)")
+	versionFlag := flag.Bool("v", false, "Print version information")
+
+	flag.Parse()
+
+	fmt.Println("Time Flag: ", *timeFlag)
+	fmt.Println("Version Flag: ", *versionFlag)
+
 	var input string
 
 	// 1. Handle Input: Check Args first, otherwise ask the user
 	if len(os.Args) > 1 {
-		input = os.Args[1]
+		input = strings.TrimSpace(os.Args[1])
 	} else {
-		fmt.Print("Enter your current stored time (e.g., 4:30 or 5:00): ")
+		fmt.Print("Enter your current stored time (e.g., 4:30): ")
 		fmt.Scanln(&input)
 	}
 
@@ -22,8 +32,8 @@ func main() {
 	// Expecting format "HH:MM"
 	storedDuration, err := parseDuration(input)
 	if err != nil {
-		fmt.Printf("Invalid format: %v. Please use HH:MM (e.g. 4:30)\n", err)
-		return
+		fmt.Fprintf(os.Stderr, "Invalid format: %v. Please use HH:MM (e.g. 4:30)\n", err)
+		os.Exit(1)
 	}
 
 	// 3. Define the Constants
@@ -36,6 +46,7 @@ func main() {
 	remainingWindow := time.Until(deadline)
 	if remainingWindow < 0 {
 		remainingWindow = 0
+		fmt.Println("⚠️ Note: The 4:00 PM deadline has already passed.")
 	}
 
 	// 5. Logic: Stored + Remaining vs Target
