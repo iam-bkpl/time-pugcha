@@ -10,23 +10,27 @@ import (
 
 func main() {
 
-	timeFlag := flag.String("t", "4:30", "Current stored time (format HH:MM)")
-	versionFlag := flag.Bool("v", false, "Print version information")
-
+	// Accept using flag
+	timeFlag := flag.String("t", "", "Current stored time (format HH:MM)")
 	flag.Parse()
 
-	fmt.Println("Time Flag: ", *timeFlag)
-	fmt.Println("Version Flag: ", *versionFlag)
+	args := flag.Args()
 
+	// Take user input
 	var input string
-
-	// 1. Handle Input: Check Args first, otherwise ask the user
-	if len(os.Args) > 1 {
-		input = strings.TrimSpace(os.Args[1])
-	} else {
+	if *timeFlag == "" && len(args) < 1 {
 		fmt.Print("Enter your current stored time (e.g., 4:30): ")
 		fmt.Scanln(&input)
 	}
+	if *timeFlag != "" {
+		input = *timeFlag
+	}
+	if len(args) > 1 {
+		input = args[1]
+	}
+	fmt.Println("Time Flag: ", *timeFlag)
+	fmt.Println("Args: ", args)
+	fmt.Println("Input: ", input)
 
 	// 2. Parse the input string into a Duration
 	// Expecting format "HH:MM"
