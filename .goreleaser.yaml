@@ -58,7 +58,7 @@ homebrew_casks:
     repository:
       owner: iam-bkpl
       name: homebrew-time-pugcha
-      token: "{{.ENV.HOMEBREW_TAP_GITHUB_TOKEN}}"
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/iam-bkpl/time-pugcha"
     description: "Can i have a coffee break ?"
     license: "MIT"
