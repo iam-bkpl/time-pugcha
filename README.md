@@ -1,7 +1,7 @@
 ## Installation
 
 ```bash
-brew tap iam-bkpl/tools
+brew tap iam-bkpl/tap
 brew install time-pugcha
 ```
 
