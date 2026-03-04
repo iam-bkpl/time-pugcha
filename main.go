@@ -81,29 +81,31 @@ func printResults(storedDuration time.Duration) {
 
 	projectedTotal := storedDuration + remainingWindow
 
+	// fmt.Println()
+	// fmt.Println("--- Results ---")
+	// fmt.Printf("Current Time:     %s\n", now.Format("15:04"))
+	// fmt.Printf("Stored Progress:  %s\n", formatDuration(storedDuration))
+	// fmt.Printf("Target:           %s\n", formatDuration(targetDuration))
+
+	// if deadlinePassed {
+	// 	fmt.Println("⚠️  Deadline:        4:00 PM has already passed")
+	// } else {
+	// 	fmt.Printf("Time until 4PM:   %s\n", formatDuration(remainingWindow.Round(time.Minute)))
+
+	// }
+
+	// fmt.Printf("Projected Total:  %s\n", formatDuration(projectedTotal.Round(time.Minute)))
+	// fmt.Println("----------------")
+
 	fmt.Println()
-	fmt.Println("--- Results ---")
-	fmt.Printf("Current Time:     %s\n", now.Format("15:04"))
-	fmt.Printf("Stored Progress:  %s\n", formatDuration(storedDuration))
-	fmt.Printf("Target:           %s\n", formatDuration(targetDuration))
-
-	if deadlinePassed {
-		fmt.Println("⚠️  Deadline:        4:00 PM has already passed")
-	} else {
-		fmt.Printf("Time until 4PM:   %s\n", formatDuration(remainingWindow.Round(time.Minute)))
-
-	}
-
-	fmt.Printf("Projected Total:  %s\n", formatDuration(projectedTotal.Round(time.Minute)))
-	fmt.Println("----------------")
 
 	if projectedTotal >= targetDuration {
 		surplus := projectedTotal - targetDuration
-		fmt.Printf("✅ You're on track! Surplus: %s\n", formatDuration(surplus.Round(time.Minute)))
+		fmt.Printf("☕️ You're on track! Surplus: %s\n", formatDuration(surplus.Round(time.Minute)))
 
 	} else {
 		shortfall := targetDuration - projectedTotal
-		fmt.Printf("⚠️  You'll be short by: %s\n", formatDuration(shortfall.Round(time.Minute)))
+		fmt.Printf("🥹 You'll be short by: %s\n", formatDuration(shortfall.Round(time.Minute)))
 	}
 	fmt.Println()
 }
