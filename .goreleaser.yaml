@@ -53,7 +53,7 @@ changelog:
       - "^test:"
 
 
-brews:
+homebrew_casks:
   - name: time-pugcha
     repository:
       owner: iam-bkpl
@@ -62,7 +62,3 @@ brews:
     homepage: "https://github.com/iam-bkpl/time-pugcha"
     description: "Can i have a coffee break ?"
     license: "MIT"
-    test:
-        system "#{bin}/time-pugcha --help"
-
-    install: bin.install "time-pugcha"
