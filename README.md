@@ -29,3 +29,9 @@ Help:
 ```bash
 time-pugcha -h
 ```
+
+---
+
+### Example:
+
+![Img](docs/images/time-pugcha.png)
