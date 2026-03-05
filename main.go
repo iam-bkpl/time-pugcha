@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"charm.land/lipgloss/v2"
 )
 
 const (
@@ -15,6 +17,19 @@ const (
 	deadlineHour  = 16 // 4 pm
 )
 
+// Styles
+var (
+	titleStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("99")).Italic(true).Underline(true)
+	valueStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("255")).
+			Bold(true)
+	successStyle = lipgloss.NewStyle().Padding(1, 2).Foreground(lipgloss.Color("82")).Bold(false).Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("70"))
+
+	errorStyle   = lipgloss.NewStyle().Padding(1, 2).Foreground(lipgloss.Color("202")).Bold(false).Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("202"))
+	spinnerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("99"))
+)
 var targetDuration = time.Duration(targetHours)*time.Hour + time.Duration(targetMinutes)*time.Minute
 
 func resolveInput(timeFlag string, args []string) (string, error) {
@@ -81,33 +96,16 @@ func printResults(storedDuration time.Duration) {
 
 	projectedTotal := storedDuration + remainingWindow
 
-	// fmt.Println()
-	// fmt.Println("--- Results ---")
-	// fmt.Printf("Current Time:     %s\n", now.Format("15:04"))
-	// fmt.Printf("Stored Progress:  %s\n", formatDuration(storedDuration))
-	// fmt.Printf("Target:           %s\n", formatDuration(targetDuration))
-
-	// if deadlinePassed {
-	// 	fmt.Println("⚠️  Deadline:        4:00 PM has already passed")
-	// } else {
-	// 	fmt.Printf("Time until 4PM:   %s\n", formatDuration(remainingWindow.Round(time.Minute)))
-
-	// }
-
-	// fmt.Printf("Projected Total:  %s\n", formatDuration(projectedTotal.Round(time.Minute)))
-	// fmt.Println("----------------")
-
-	fmt.Println()
-
 	if projectedTotal >= targetDuration {
 		surplus := projectedTotal - targetDuration
-		fmt.Printf("☕️ You're on track! Surplus: %s\n", formatDuration(surplus.Round(time.Minute)))
+		msg := "Have some coffee my friend! You got extra: " + titleStyle.Render(formatDuration(surplus.Round(time.Minute)))
+		fmt.Println(successStyle.Render(msg))
 
 	} else {
 		shortfall := targetDuration - projectedTotal
-		fmt.Printf("🥹 You'll be short by: %s\n", formatDuration(shortfall.Round(time.Minute)))
+		msg := "Oops you are short by : " + titleStyle.Render(formatDuration(shortfall.Round(time.Minute)))
+		fmt.Println(errorStyle.Render(msg))
 	}
-	fmt.Println()
 }
 
 func formatDuration(d time.Duration) string {
@@ -121,10 +119,10 @@ func formatDuration(d time.Duration) string {
 }
 
 func main() {
-
 	// Accept using flag
 	timeFlag := flag.String("t", "", "Current stored time (format HH:MM)")
 	flag.Usage = func() {
+
 		fmt.Fprintf(os.Stderr, "Usage: %s [-t HH:MM] [time]\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Arguments:\n")
 		fmt.Fprintf(os.Stderr, "  -t HH:MM    Stored time as a flag\n")
@@ -147,6 +145,24 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-
+	showSpinner()
 	printResults(storedDuration)
+}
+
+func PrintError(msg string) {
+	fmt.Println(errorStyle.Render(msg))
+}
+
+func PrintSuccess(msg string) {
+	fmt.Println(successStyle.Render(msg))
+}
+
+func showSpinner() {
+	frames := []string{"🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"}
+	for i := 0; i < 12; i++ {
+		frame := frames[i%len(frames)]
+		fmt.Printf("\r%s %s...", spinnerStyle.Render(frame), valueStyle.Render("Calculating"))
+		time.Sleep(30 * time.Millisecond)
+	}
+	fmt.Print("\r\033[K") // clear the spinner line
 }
